@@ -50,10 +50,15 @@ APPS = [
     {"slug": "matcha-tycoon",     "name": "Matcha Shop Tycoon", "category": "ads",     "blurb": "A matcha-shop tycoon simulation game."},
     {"slug": "econquest",         "name": "EconQuest",          "category": "ads",     "blurb": "A game-based app for learning economics."},
     {"slug": "strategylab",       "name": "StrategyLab",        "category": "ads",     "blurb": "A stock-strategy backtesting app."},
-    {"slug": "derivatives-101",   "name": "Derivatives 101",    "category": "offline", "blurb": "An offline course app for learning options and derivatives."},
-    {"slug": "cashflow",          "name": "Cashflow",           "category": "offline", "blurb": "An offline personal-finance learning and budgeting app."},
+    # Derivatives 101 and SignQuest were "offline", whose text claims "no
+    # advertising" -- but both ship live AdMob unit ids, a real
+    # GADApplicationIdentifier, MobileAds.start() and banners in the UI.
+    {"slug": "derivatives-101",   "name": "Derivatives 101",    "category": "ads",     "blurb": "A course app for learning options and derivatives."},
+    # Cashflow has three in-app purchases, which "offline" never mentions. It
+    # serves no ads (no SDK linked, units nil in release), so "iap" fits.
+    {"slug": "cashflow",          "name": "Cashflow",           "category": "iap",     "blurb": "An offline personal-finance learning and budgeting app."},
     {"slug": "dailyhealth",       "name": "DailyHealth",        "category": "offline", "blurb": "A private, fully offline health tracker."},
-    {"slug": "signquest",         "name": "SignQuest",          "category": "offline", "blurb": "An offline app for learning American Sign Language."},
+    {"slug": "signquest",         "name": "SignQuest",          "category": "ads",     "blurb": "An app for learning American Sign Language."},
     # ʻŌleloQuest was "iap", but it ships live AdMob banner/interstitial/rewarded
     # units -- the "iap" text claims "no advertising", which would have been false.
     {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "ads",     "blurb": "An offline app for learning the Hawaiian language."},
