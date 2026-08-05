@@ -51,9 +51,9 @@ Apple's standard EULA) is:
 https://YOUR_USERNAME.github.io/legal/terms.html
 ```
 
-App slugs: color-sort, reactor, blockburst, matcha-tycoon, econquest,
+App slugs (16): color-sort, reactor, blockburst, matcha-tycoon, econquest,
 strategylab, derivatives-101, cashflow, dailyhealth, signquest, oleloquest,
-pourfolio, chapteros.
+pourfolio, chapteros, sigmaquest, chipwave, novaswarm.
 
 ## Before you submit — verify each app's data category
 
@@ -63,9 +63,23 @@ Privacy "nutrition label" you fill out in App Store Connect. Categories used:
 - **offline** — collects/transmits no data (Derivatives 101, Cashflow,
   DailyHealth, SignQuest).
 - **ads** — shows Google AdMob ads, which collect device/ad data (Color Sort,
-  Reactor, BlockBurst, Matcha Shop Tycoon, EconQuest, StrategyLab).
-- **iap** — in-app purchases, offline content, no ads (ʻŌleloQuest).
+  Reactor, BlockBurst, Matcha Shop Tycoon, EconQuest, StrategyLab,
+  ʻŌleloQuest).
+- **iap** — in-app purchases, offline content, no ads (SigmaQuest, Chipwave,
+  Nova Swarm).
 - **cloud** — accounts + data stored in Firebase (Pourfolio, ChapterOS).
 
 If an app's data practices change (e.g. you add or remove ads, or add
 accounts), change its `category` in `generate.py` and regenerate.
+
+### ⚠️ Two things to re-check before you submit
+
+1. **ʻŌleloQuest moved from `iap` to `ads` (2026-08-05).** It ships live AdMob
+   banner, interstitial and rewarded units, but the `iap` policy text says
+   outright that there is no advertising — so the old page was wrong. If you
+   ever remove its ads, move it back.
+2. **SigmaQuest, Chipwave and Nova Swarm are `iap` only because their ad units
+   are `nil` in release** — they have AdMob code but are not registered on
+   AdMob, so no ads are served today. **The moment you paste real unit ids in,
+   move them to `ads` and regenerate**, or the policy will understate what the
+   app collects and stop matching your privacy nutrition label.

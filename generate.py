@@ -32,6 +32,14 @@ CONFIG = {
 #              "ads"      = shows Google AdMob ads (collects device/ad data)
 #              "iap"      = in-app purchases, offline content, no ads
 #              "cloud"    = accounts + data stored in the cloud (Firebase)
+#   icloud   : optional, True if the app syncs via the USER's own iCloud
+#              (NSUbiquitousKeyValueStore / CloudKit). Adds a short section.
+#
+# The category must match what the app ACTUALLY ships, because the policy has
+# to line up with the App Store privacy "nutrition label". In particular:
+# "iap" states outright that there is no advertising -- so the moment an app
+# starts serving AdMob ads, move it to "ads" (the "ads" text already covers
+# optional in-app purchases, so it fits apps that do both).
 # ---------------------------------------------------------------------------
 APPS = [
     {"slug": "color-sort",        "name": "Color Sort",         "category": "ads",     "blurb": "A relaxing water-sort color puzzle game."},
@@ -44,9 +52,19 @@ APPS = [
     {"slug": "cashflow",          "name": "Cashflow",           "category": "offline", "blurb": "An offline personal-finance learning and budgeting app."},
     {"slug": "dailyhealth",       "name": "DailyHealth",        "category": "offline", "blurb": "A private, fully offline health tracker."},
     {"slug": "signquest",         "name": "SignQuest",          "category": "offline", "blurb": "An offline app for learning American Sign Language."},
-    {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "iap",     "blurb": "An offline app for learning the Hawaiian language."},
+    # ʻŌleloQuest was "iap", but it ships live AdMob banner/interstitial/rewarded
+    # units -- the "iap" text claims "no advertising", which would have been false.
+    {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "ads",     "blurb": "An offline app for learning the Hawaiian language."},
     {"slug": "pourfolio",         "name": "Pourfolio",          "category": "cloud",   "blurb": "A drink journal with optional social features."},
     {"slug": "chapteros",         "name": "ChapterOS",          "category": "cloud",   "blurb": "An organization/chapter management app."},
+
+    # Added 2026-08-05. All three have AdMob code but are NOT registered on
+    # AdMob, so their ad units are nil in release and no ads are served -- which
+    # is why they are "iap" and not "ads" today. Switch them to "ads" as soon as
+    # real unit ids go in, or the policy will understate what they collect.
+    {"slug": "sigmaquest",        "name": "SigmaQuest",         "category": "iap",     "blurb": "An offline app for learning statistics.", "icloud": True},
+    {"slug": "chipwave",          "name": "Chipwave",           "category": "iap",     "blurb": "A play-money social casino game. Play chips only, with no cash-out and no prizes of value."},
+    {"slug": "novaswarm",         "name": "Nova Swarm",         "category": "iap",     "blurb": "A bullet-heaven arcade roguelite."},
 ]
 
 # ---------------------------------------------------------------------------
@@ -216,6 +234,18 @@ will delete it.</p>
 """
     else:
         sections = "<p>No policy defined for this category.</p>"
+
+    # Apps that sync through the user's OWN iCloud account. Worth stating
+    # plainly, because the "offline"/"iap" text otherwise says data stays on
+    # the device -- which would understate that it reaches their other devices.
+    if app.get("icloud"):
+        sections += f"""
+<h2>iCloud sync</h2>
+<p>{name} can sync your progress between your own devices using Apple&rsquo;s iCloud. That data
+travels through <strong>your</strong> Apple account, not through us &mdash; we operate no servers
+and never receive it. Apple handles it under Apple&rsquo;s privacy policy. You can turn this off
+in iOS Settings, and deleting the app removes its local copy.</p>
+"""
 
     shared_tail = f"""
 <h2>Your choices &amp; rights</h2>
