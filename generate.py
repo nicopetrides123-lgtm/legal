@@ -19,7 +19,9 @@ CONFIG = {
     "email": "nicopetrides123@gmail.com",
     "jurisdiction": "the State of Oregon, United States",
     "site_title": "App Legal Center",
-    "updated": "July 20, 2026",
+    # Bump this whenever the policy text materially changes -- the policies
+    # themselves promise that material changes get a new "last updated" date.
+    "updated": "August 5, 2026",
 }
 
 # ---------------------------------------------------------------------------
