@@ -40,15 +40,23 @@ CONFIG = {
 # The category must match what the app ACTUALLY ships, because the policy has
 # to line up with the App Store privacy "nutrition label". In particular:
 # "iap" states outright that there is no advertising -- so the moment an app
-# starts serving AdMob ads, move it to "ads" (the "ads" text already covers
-# optional in-app purchases, so it fits apps that do both).
+# starts serving AdMob ads, move it to "ads".
+#
+# An "ads" app that ALSO sells in-app purchases must set "iap": True, which adds
+# the purchase wording to its page. Do NOT set it otherwise: until 2026-08-06 the
+# "ads" template told every reader the app "may offer optional in-app purchases",
+# which was false for 7 of the 9 ads apps and contradicted an App Store listing
+# answering IAP = No. Ground the flag in code -- `import StoreKit` plus a
+# .storekit file -- not in what the app feels like it should have.
 # ---------------------------------------------------------------------------
 APPS = [
     {"slug": "color-sort",        "name": "Color Sort",         "category": "ads",     "blurb": "A relaxing water-sort color puzzle game."},
     {"slug": "reactor",           "name": "Reactor",            "category": "ads",     "blurb": "An idle reactor tap-and-build game."},
-    {"slug": "blockburst",        "name": "BlockBurst",         "category": "ads",     "blurb": "A block-blast style grid puzzle game."},
+    {"slug": "blockburst",        "name": "BlockBurst",         "category": "ads",     "blurb": "A block-drop grid puzzle game."},
     {"slug": "matcha-tycoon",     "name": "Matcha Shop Tycoon", "category": "ads",     "blurb": "A matcha-shop tycoon simulation game."},
-    {"slug": "econquest",         "name": "EconQuest",          "category": "ads",     "blurb": "A game-based app for learning economics."},
+    # EconQuest and ʻŌleloQuest are the only two "ads" apps that really sell IAPs
+    # (verified: `import StoreKit` + a .storekit file in each).
+    {"slug": "econquest",         "name": "EconQuest",          "category": "ads",     "iap": True, "blurb": "A game-based app for learning economics."},
     {"slug": "strategylab",       "name": "StrategyLab",        "category": "ads",     "blurb": "A stock-strategy backtesting app."},
     # Derivatives 101 and SignQuest were "offline", whose text claims "no
     # advertising" -- but both ship live AdMob unit ids, a real
@@ -61,7 +69,7 @@ APPS = [
     {"slug": "signquest",         "name": "SignQuest",          "category": "ads",     "blurb": "An app for learning American Sign Language."},
     # ʻŌleloQuest was "iap", but it ships live AdMob banner/interstitial/rewarded
     # units -- the "iap" text claims "no advertising", which would have been false.
-    {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "ads",     "blurb": "An offline app for learning the Hawaiian language."},
+    {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "ads",     "iap": True, "blurb": "An offline app for learning the Hawaiian language."},
     {"slug": "pourfolio",         "name": "Pourfolio",          "category": "cloud",   "blurb": "A drink journal with optional social features."},
     {"slug": "chapteros",         "name": "ChapterOS",          "category": "cloud",   "blurb": "An organization/chapter management app."},
 
@@ -141,12 +149,29 @@ controlled entirely by you through your Apple account.</p>
 users of all ages in that respect.</p>
 """
     elif cat == "ads":
+        # Only apps that actually ship StoreKit get purchase wording. See the
+        # note on the APPS list -- claiming purchases an app does not have
+        # contradicts the App Store listing's own IAP answer.
+        if app.get("iap"):
+            short_purchases = (", and it may offer optional\nin-app purchases processed by Apple")
+            purchases_section = f"""
+<h2>In-app purchases</h2>
+<p>{name} offers optional purchases. Payment is handled entirely by Apple through the App Store.
+We never see or store your payment card details.</p>
+"""
+        else:
+            short_purchases = ""
+            purchases_section = f"""
+<h2>In-app purchases</h2>
+<p>{name} has none. There is nothing to buy inside the app, and we never see or store payment
+details of any kind.</p>
+"""
+
         sections = f"""
 <h2>The short version</h2>
 <p>{name} does not require an account and we do not collect personal information directly.
-The app shows advertising provided by <strong>Google AdMob</strong>, and it may offer optional
-in-app purchases processed by Apple. Those services collect limited technical data as described
-below.</p>
+The app shows advertising provided by <strong>Google AdMob</strong>{short_purchases}. Those
+services collect limited technical data as described below.</p>
 
 <h2>Advertising (Google AdMob)</h2>
 <p>To keep the app free, {name} displays ads served by Google AdMob. To deliver and measure ads,
@@ -162,10 +187,7 @@ under its own policies, not by us.</p>
 <em>Settings &rsaquo; Privacy &amp; Security &rsaquo; Tracking</em> and
 <em>Settings &rsaquo; Privacy &amp; Security &rsaquo; Apple Advertising</em>.</p>
 
-<h2>In-app purchases</h2>
-<p>If the app offers purchases, payment is handled entirely by Apple through the App Store.
-We never see or store your payment card details.</p>
-
+{purchases_section}
 <h2>Information we collect ourselves</h2>
 <p>We do not operate our own servers and do not collect personal information directly. Your game
 progress and settings are stored locally on your device.</p>
