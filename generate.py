@@ -309,6 +309,96 @@ def account_delete_note(app):
 
 
 # ---------------------------------------------------------------------------
+# Per-app support pages
+#
+# App Store Connect requires a Support URL per app, and Guideline 1.5 expects it
+# to actually offer support. A shared "legal center" index technically carries a
+# contact address but reads as a legal page, which a reviewer can reject. These
+# pages are per-app so the URL a reviewer clicks is unambiguously about the app
+# in front of them.
+#
+# Every FAQ entry below is gated on the same flags that drive the privacy page,
+# so the two can never contradict each other -- do not add an entry that isn't
+# grounded in what the app actually ships.
+# ---------------------------------------------------------------------------
+def support_body(app):
+    name = html.escape(app["name"])
+    email = CONFIG["email"]
+    cat = app["category"]
+    has_iap = app.get("iap") or cat == "iap"
+    is_cloud = cat == "cloud"
+    has_ads = cat == "ads"
+
+    faqs = []
+
+    faqs.append((
+        "I found a bug, or something isn't working",
+        f"Email <a href=\"mailto:{email}\">{email}</a> with your device model and "
+        f"iOS version, and what you were doing when it happened. A screenshot helps "
+        f"a lot. {name} is maintained by one developer, so replies usually arrive "
+        f"within a few days."))
+
+    faqs.append((
+        "I have a feature request",
+        f"Send it to <a href=\"mailto:{email}\">{email}</a>. Requests genuinely do "
+        f"shape what gets built next."))
+
+    if has_iap:
+        faqs.append((
+            "How do I restore a purchase?",
+            "Purchases are tied to your Apple Account. Reinstalling the app or "
+            "setting up a new device will not lose them &mdash; use the "
+            "<em>Restore Purchases</em> option in the app. If a purchase still "
+            f"doesn't appear, email <a href=\"mailto:{email}\">{email}</a>."))
+        faqs.append((
+            "How do I get a refund?",
+            "Refunds are handled by Apple, not by us &mdash; we have no ability to "
+            "issue one. Request one at "
+            "<a href=\"https://reportaproblem.apple.com\">reportaproblem.apple.com</a>."))
+
+    if is_cloud:
+        faqs.append((
+            "How do I delete my account and data?",
+            f"Use the account-deletion option in the app, or email "
+            f"<a href=\"mailto:{email}\">{email}</a> and we will delete it for you."))
+    else:
+        faqs.append((
+            "Where is my data stored, and how do I delete it?",
+            f"{name} stores your progress and settings on your device. Deleting "
+            f"the app removes that data permanently &mdash; there is no server copy "
+            f"we can restore it from, so it cannot be recovered afterwards."))
+
+    if has_ads:
+        faqs.append((
+            "Can I limit ad personalization?",
+            "Yes. iOS controls this system-wide under "
+            "<em>Settings &rsaquo; Privacy &amp; Security &rsaquo; Tracking</em> and "
+            "<em>Settings &rsaquo; Privacy &amp; Security &rsaquo; Apple Advertising</em>."))
+
+    items = "\n".join(
+        f"  <h3>{q}</h3>\n  <p>{a}</p>" for q, a in faqs)
+
+    return f"""
+<article class="policy">
+<a class="back" href="../index.html">&larr; All apps</a>
+<h1>Support &mdash; {name}</h1>
+<p class="updated">Last updated: {CONFIG['updated']}</p>
+
+<p>Questions, bugs, or feedback about {name}? Email
+<a href="mailto:{email}">{email}</a> &mdash; that address is read by the developer
+directly.</p>
+
+<h2>Common questions</h2>
+{items}
+
+<h2>Privacy and terms</h2>
+<p>See the <a href="../privacy/{app['slug']}.html">Privacy Policy for {name}</a>
+and the <a href="../terms.html">Terms of Service</a>.</p>
+</article>
+"""
+
+
+# ---------------------------------------------------------------------------
 # Shared Terms of Service
 # ---------------------------------------------------------------------------
 def terms_body():
@@ -420,6 +510,7 @@ def index_body():
         <p>{html.escape(app['blurb'])}</p>
       </div>
       <div class="app-links">
+        <a href="support/{app['slug']}.html">Support</a>
         <a href="privacy/{app['slug']}.html">Privacy Policy</a>
         <a href="terms.html">Terms</a>
       </div>
@@ -517,7 +608,9 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     docs = os.path.join(here, "docs")
     priv = os.path.join(docs, "privacy")
+    supp = os.path.join(docs, "support")
     os.makedirs(priv, exist_ok=True)
+    os.makedirs(supp, exist_ok=True)
 
     # style
     with open(os.path.join(docs, "style.css"), "w", encoding="utf-8") as f:
@@ -542,7 +635,15 @@ def main():
                          f"Privacy Policy for {app['name']}.",
                          privacy_body(app), depth=1))
 
-    print(f"Generated {len(APPS)} privacy pages + index + terms into {docs}")
+    # support per app
+    for app in APPS:
+        with open(os.path.join(supp, f"{app['slug']}.html"), "w", encoding="utf-8") as f:
+            f.write(page(f"Support — {app['name']}",
+                         f"Support and contact information for {app['name']}.",
+                         support_body(app), depth=1))
+
+    print(f"Generated {len(APPS)} privacy + {len(APPS)} support pages "
+          f"+ index + terms into {docs}")
 
 
 if __name__ == "__main__":
