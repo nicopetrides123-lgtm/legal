@@ -62,9 +62,10 @@ APPS = [
     # advertising" -- but both ship live AdMob unit ids, a real
     # GADApplicationIdentifier, MobileAds.start() and banners in the UI.
     {"slug": "derivatives-101",   "name": "Derivatives 101",    "category": "ads",     "blurb": "A course app for learning options and derivatives."},
-    # Cashflow has three in-app purchases, which "offline" never mentions. It
-    # serves no ads (no SDK linked, units nil in release), so "iap" fits.
-    {"slug": "cashflow",          "name": "Cashflow",           "category": "iap",     "blurb": "An offline personal-finance learning and budgeting app."},
+    # Cashflow: moved iap -> ads 2026-09-01. Real AdMob units are being wired in,
+    # so "iap" (which claims "no advertising") would understate what it collects.
+    # Keeps iap:True for its three non-consumables.
+    {"slug": "cashflow",          "name": "Cashflow",           "category": "ads",     "iap": True, "blurb": "An offline personal-finance learning and budgeting app."},
     {"slug": "dailyhealth",       "name": "DailyHealth",        "category": "offline", "blurb": "A private, fully offline health tracker."},
     {"slug": "signquest",         "name": "SignQuest",          "category": "ads",     "blurb": "An app for learning American Sign Language."},
     # ʻŌleloQuest was "iap", but it ships live AdMob banner/interstitial/rewarded
@@ -73,11 +74,12 @@ APPS = [
     {"slug": "pourfolio",         "name": "Pourfolio",          "category": "cloud",   "blurb": "A drink journal with optional social features."},
     {"slug": "chapteros",         "name": "ChapterOS",          "category": "cloud",   "blurb": "An organization/chapter management app."},
 
-    # Added 2026-08-05. All three have AdMob code but are NOT registered on
-    # AdMob, so their ad units are nil in release and no ads are served -- which
-    # is why they are "iap" and not "ads" today. Switch them to "ads" as soon as
-    # real unit ids go in, or the policy will understate what they collect.
-    {"slug": "sigmaquest",        "name": "SigmaQuest",         "category": "iap",     "blurb": "An offline app for learning statistics.", "icloud": True},
+    # Added 2026-08-05. Chipwave and Nova Swarm have AdMob code but are NOT
+    # registered on AdMob, so their ad units are nil in release and no ads are
+    # served -- which is why they are still "iap". Switch them to "ads" as soon
+    # as real unit ids go in, or the policy will understate what they collect.
+    # SigmaQuest made that move on 2026-09-01; its real units are being wired in.
+    {"slug": "sigmaquest",        "name": "SigmaQuest",         "category": "ads",     "iap": True, "blurb": "An offline app for learning statistics.", "icloud": True},
     {"slug": "chipwave",          "name": "Chipwave",           "category": "iap",     "blurb": "A play-money social casino game. Play chips only, with no cash-out and no prizes of value."},
     {"slug": "novaswarm",         "name": "Nova Swarm",         "category": "iap",     "blurb": "A bullet-heaven arcade roguelite."},
 ]
