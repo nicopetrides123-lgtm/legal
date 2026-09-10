@@ -80,6 +80,11 @@ APPS = [
     # as real unit ids go in, or the policy will understate what they collect.
     # SigmaQuest made that move on 2026-09-01; its real units are being wired in.
     {"slug": "sigmaquest",        "name": "SigmaQuest",         "category": "ads",     "iap": True, "blurb": "An offline app for learning statistics.", "icloud": True},
+    # Ready Room: registered on AdMob 2026-09-09 (app ca-app-pub-7603265843182353~7622326334)
+    # with real banner + interstitial units wired in. No StoreKit anywhere in the
+    # target and no NSUbiquitousKeyValueStore, so no "iap" and no "icloud" -- both
+    # verified in source rather than assumed.
+    {"slug": "ready-room",        "name": "Ready Room",         "category": "ads",     "blurb": "A study app for the ASTB-E aviation selection test battery."},
     {"slug": "chipwave",          "name": "Chipwave",           "category": "iap",     "blurb": "A play-money social casino game. Play chips only, with no cash-out and no prizes of value."},
     {"slug": "novaswarm",         "name": "Nova Swarm",         "category": "iap",     "blurb": "A bullet-heaven arcade roguelite."},
 ]
@@ -191,7 +196,7 @@ under its own policies, not by us.</p>
 
 {purchases_section}
 <h2>Information we collect ourselves</h2>
-<p>We do not operate our own servers and do not collect personal information directly. Your game
+<p>We do not operate our own servers and do not collect personal information directly. Your
 progress and settings are stored locally on your device.</p>
 
 <h2>Children's privacy</h2>
