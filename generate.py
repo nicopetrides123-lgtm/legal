@@ -80,13 +80,19 @@ APPS = [
     # as real unit ids go in, or the policy will understate what they collect.
     # SigmaQuest made that move on 2026-09-01; its real units are being wired in.
     {"slug": "sigmaquest",        "name": "SigmaQuest",         "category": "ads",     "iap": True, "blurb": "An offline app for learning statistics.", "icloud": True},
-    # Ready Room: registered on AdMob 2026-09-09 (app ca-app-pub-7603265843182353~7622326334)
+    # Glidepath: registered on AdMob 2026-09-09 (app ca-app-pub-7603265843182353~7622326334)
     # with real banner + interstitial units wired in. No StoreKit anywhere in the
     # target and no NSUbiquitousKeyValueStore, so no "iap" and no "icloud" -- both
-    # verified in source rather than assumed.
-    {"slug": "ready-room",        "name": "Ready Room",         "category": "ads",     "blurb": "A study app for the ASTB-E aviation selection test battery."},
+    # verified in source rather than assumed. Renamed from "Ready Room" 2026-09-15
+    # (an unrelated "Try Ready Room LLC" ships a Ready Room app); the Xcode target
+    # and bundle id are still ReadyRoom, which users never see.
+    {"slug": "glidepath",         "name": "Glidepath",          "category": "ads",     "blurb": "A study app for the ASTB-E aviation selection test battery."},
     {"slug": "chipwave",          "name": "Chipwave",           "category": "iap",     "blurb": "A play-money social casino game. Play chips only, with no cash-out and no prizes of value."},
-    {"slug": "novaswarm",         "name": "Nova Swarm",         "category": "iap",     "blurb": "A bullet-heaven arcade roguelite."},
+    # Nova Swarm: moved iap -> ads 2026-09-13, the day it was registered on AdMob
+    # (app ca-app-pub-7603265843182353~5987010140) with two real rewarded units
+    # wired in. "iap" claims "no advertising", which is now false. Keeps iap:True
+    # for its three Core consumables and the Nova Pack non-consumable.
+    {"slug": "novaswarm",         "name": "Nova Swarm",         "category": "ads",     "iap": True, "blurb": "A bullet-heaven arcade roguelite."},
 ]
 
 # ---------------------------------------------------------------------------
