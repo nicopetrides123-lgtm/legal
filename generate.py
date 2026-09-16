@@ -70,7 +70,7 @@ APPS = [
     {"slug": "signquest",         "name": "SignQuest",          "category": "ads",     "blurb": "An app for learning American Sign Language."},
     # ʻŌleloQuest was "iap", but it ships live AdMob banner/interstitial/rewarded
     # units -- the "iap" text claims "no advertising", which would have been false.
-    {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "ads",     "iap": True, "blurb": "An offline app for learning the Hawaiian language."},
+    {"slug": "oleloquest",        "name": "ʻŌleloQuest",         "category": "ads",     "iap": True, "blurb": "A lesson-based app for learning the Hawaiian language."},
     {"slug": "pourfolio",         "name": "Pourfolio",          "category": "cloud",   "blurb": "A drink journal with optional social features."},
     {"slug": "chapteros",         "name": "ChapterOS",          "category": "cloud",   "blurb": "An organization/chapter management app."},
 
