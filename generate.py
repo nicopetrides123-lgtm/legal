@@ -93,6 +93,10 @@ APPS = [
     # wired in. "iap" claims "no advertising", which is now false. Keeps iap:True
     # for its three Core consumables and the Nova Pack non-consumable.
     {"slug": "novaswarm",         "name": "Nova Swarm",         "category": "ads",     "iap": True, "blurb": "A bullet-heaven arcade roguelite."},
+    # Math Quest: added 2026-09-25. No GoogleMobileAds, no StoreKit and no network
+    # code anywhere in the target (verified in source); its only off-device path
+    # is NSUbiquitousKeyValueStore progress sync, hence "offline" + icloud.
+    {"slug": "math-quest",        "name": "Math Quest",         "category": "offline", "blurb": "An app for learning and practicing math, from counting to calculus.", "icloud": True},
 ]
 
 # ---------------------------------------------------------------------------
