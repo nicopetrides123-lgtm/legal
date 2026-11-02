@@ -97,6 +97,10 @@ APPS = [
     # code anywhere in the target (verified in source); its only off-device path
     # is NSUbiquitousKeyValueStore progress sync, hence "offline" + icloud.
     {"slug": "math-quest",        "name": "Math Quest",         "category": "offline", "blurb": "An app for learning and practicing math, from counting to calculus.", "icloud": True},
+    # LedgerQuest: added 2026-11-02. Real AdMob units (app ca-app-pub-7603265843182353~7041852736)
+    # banner + interstitial, UMP consent, non-personalized requests. No StoreKit and no
+    # iCloud in the target, so no "iap" / "icloud".
+    {"slug": "ledgerquest",       "name": "LedgerQuest",        "category": "ads",     "blurb": "A lesson-based app for learning accounting."},
 ]
 
 # ---------------------------------------------------------------------------
